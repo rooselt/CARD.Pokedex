@@ -41,6 +41,7 @@ my-app/
           Layout.js
           Loading.js
           spinner.gif
+          logo.svg
         pokemon/
           Pokemon.js
           PokemonCard.js
@@ -55,6 +56,6 @@ my-app/
     NavMenu.css
     NavMenu.js
     registerServiceWorker.js
-    logo.svg
+    
 ```
 
