@@ -5,6 +5,10 @@ import { NavMenu } from '../../NavMenu';
 export class Layout extends Component {
     static displayName = Layout.name;
 
+    componentDidMount() {
+        document.title = "Pokedex"
+    }
+
     render() {
         return (
             <div>
