@@ -10,8 +10,6 @@ const Sprite = styled.img`
   display: none;
 `;
 
-
-
 //const pokeContainer = document.getElementById("poke_container");
 //const pokeNumber = 1000;
 const colors = {
@@ -30,7 +28,6 @@ const colors = {
     fighting: "#E6E0D4",
     normal: "#F5F5F5"
 };
-
 const tagColors = {
     normal: "#A8A878",
     fighting: "#C03028",
@@ -89,7 +86,6 @@ var createPopUpCard = pokemon => {
     }
 };
 
-
 var selectPokemon = async id => {
     const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
     let res = await fetch(url);
@@ -123,7 +119,6 @@ var createPokemonCard = async pokemon => {
     }
 }
 
-
 export default class PokemonCard extends Component {
     static displayName = PokemonCard.name;
 
@@ -142,9 +137,7 @@ export default class PokemonCard extends Component {
             imageLoading: true,
             toManyRequests: false
         };
-        //this.handleScan = this.handleScan.bind(this)
     }
-
 
     async componentDidMount() {
         let pokemon = await createPokemonCard(this.props.pokemon);
@@ -152,14 +145,6 @@ export default class PokemonCard extends Component {
         this.setState({ pokemon: pokemon });
     }
 
-    //handleScan(data) {
-    //    let cardPhase = newPhaseCardItem(data);
-    //    //this.setState({
-    //    //    card: { item: dataValue }
-    //    //});
-
-    //    this.saveCardData(cardPhase);
-    //}
 
     handleError(err) {
         console.error(err)
@@ -179,7 +164,6 @@ export default class PokemonCard extends Component {
     }
 
     render() {
-
         function SpanTypes(item) {
             let types = item.types;
 
@@ -188,14 +172,17 @@ export default class PokemonCard extends Component {
                 let secondType = types[0];
 
                 return (
-                    <div>
-                        <span className="types" style={{ backgroundColor: setColor(secondType) }}>{firstType}</span>
+                    <div className="types">
+                        <span className="types" style={{ backgroundColor: setColor(firstType) }}>{firstType}</span>
                         <span className="types" style={{ backgroundColor: setColor(secondType) }}>{secondType}</span>
                     </div>);
             }
+
             let uniqueType = types[0];
 
-            return (<span className="types" style={{ backgroundColor: setColor(uniqueType) }}>{uniqueType}</span>);
+            return (<div className="types">
+                        <span className="types" style={{ backgroundColor: setColor(uniqueType) }}>{uniqueType}</span>
+                    </div>);
         }
 
         let isPokemon = Object.getOwnPropertyNames(this.state.pokemon).length > 0;
@@ -229,10 +216,7 @@ export default class PokemonCard extends Component {
                                 <span className="number">#{this.state.pokemon.id.toString().padStart(3, "0")}</span>
                                 <h3 className="name">{this.state.pokemon.name}</h3>
                             </div>
-                            <div className="types">
-                                <SpanTypes types={this.state.pokemon.types} />
-                            </div>
-
+                            <SpanTypes types={this.state.pokemon.types} />
                             <div id={this.state.pokemon.name + "_info"} className="more_info" style={{ display: 'none', opacity: '0' }}>
                                 <span className="title">Ability Info</span>
                                 <h3 className="name_ability">{this.state.pokemon.ability.name}</h3>
@@ -242,10 +226,10 @@ export default class PokemonCard extends Component {
                                 ))}
                             </div>
                         </div>
-
                     )
                     :
-                    (<Loading />
+                    (
+                        <Loading />
                     )}
             </div>
         );

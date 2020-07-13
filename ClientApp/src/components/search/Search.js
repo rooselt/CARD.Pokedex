@@ -5,22 +5,34 @@ export default class Search extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = { text: '' }
     }
+
+    onFormSubmit = event => {
+        event.preventDefault()
+
+        this.props.onSubmit(this.state.text)
+    }
+
 
     render() {
         return (
             <div>
-                <form>
+                <form onSubmit={this.onFormSubmit}>
                     <input
                         placeholder="Pokemon"
                         className="form-control mx-auto"
+                        value={this.state.text}
+                        onChange={e => this.setState({ text: e.target.value })}
                         style={{
                             backgroundColor: 'white transparent',
                             height: '1.75em',
                             width: '95%',
                             borderRadius: '15px',
                             opacity: '0.8',
-                            fontSize: '1.75em'
+                            fontSize: '1.75em',
+                            marginBottom: '27px'
                         }}
                     />
                 </form>

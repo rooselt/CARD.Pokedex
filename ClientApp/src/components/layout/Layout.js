@@ -3,16 +3,19 @@ import { Container } from 'reactstrap';
 import { NavMenu } from '../../NavMenu';
 
 export class Layout extends Component {
-  static displayName = Layout.name;
+    static displayName = Layout.name;
 
-  render () {
-    return (
-      <div>
-        <NavMenu />
-        <Container>
-          {this.props.children}
-        </Container>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <NavMenu />
+                <Container>
+                    {this.props.children}
+                </Container>
+                <footer>
+                    <p>Created with: <a href="https://pokeapi.co/">PokeAPI</a></p>
+                </footer>
+            </div>
+        );
+    }
 }

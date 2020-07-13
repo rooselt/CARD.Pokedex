@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PokemonCard from './PokemonCard';
 import Loading from '../layout/Loading';
 
-
 //var createPopUpCard = pokemon => {
 //    let popEl = `${pokemon.name}_info`;
 //    let actEl = document.getElementById(popEl).style.display;
@@ -19,14 +18,21 @@ import Loading from '../layout/Loading';
 
 const pokeNumber = 10;
 
-//var getPokemonAll = async url => {
-//    const res = await fetch(url);
-//    const pokemon = await res.json();
 
-//    return pokemon;
-//};
+var getPokemonByName = async inputValue => {
 
-var getPokemon = async id => {
+    if (inputValue == null)
+        return [];
+
+    const url = `https://pokeapi.co/api/v2/pokemon/${inputValue}`;
+
+    const res = await fetch(url);
+    const pokemon = await res.json();
+
+    return pokemon;
+};
+
+var getPokemonById = async id => {
     const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
 
     let res = await fetch(url);
@@ -39,7 +45,7 @@ var fetchPokemon = async () => {
     let result = [];
 
     for (let i = 1; i <= pokeNumber; i++) {
-        var item = await getPokemon(i);
+        var item = await getPokemonById(i);
         result.push(item);
     }
 
@@ -57,9 +63,11 @@ export default class PokemonList extends Component {
             card: [],
             loading: true,
             url: 'https://pokeapi.co/api/v2/pokemon/',
+            filtered: []
         };
 
-        //this.handleScan = this.handleScan.bind(this)
+       
+        //this.handleChange = this.handleChange.bind(this);
     }
 
 
@@ -69,29 +77,37 @@ export default class PokemonList extends Component {
         this.setState({ card: pokemon });
     }
 
-    //handleScan(data) {
-    //    let cardPhase = newPhaseCardItem(data);
-    //    //this.setState({
-    //    //    card: { item: dataValue }
-    //    //});
-
-    //    this.saveCardData(cardPhase);
-    //}
 
     render() {
-        return (
-            <div className="poke-container" >
-            
-                {this.state.card ? (
+        
+        let filtered = Object.keys(this.props.filtered).length > 0 ? this.props.filtered : this.state.card;
+
+        if (filtered.count !== undefined && filtered.count > 0) {
+            return (
+                <div className="poke-container">
                     <div className="row">
-                        {this.state.card.map(pokemon => (
-                            <PokemonCard key={pokemon.name} pokemon={pokemon} />
-                        ))}
+                        {this.state.card.map(pokemon => {
+                            return <PokemonCard key={pokemon.id} pokemon={pokemon} />
+                        })}
+                    </div>
+                </div>
+            )
+        }
+
+        return (
+            <div className="poke-container" >              
+                {Object.keys(filtered).length > 0 ? (
+                    <div className="row">
+                        {this.state.card && Object.keys(this.props.filtered).length === 0 ?
+                            this.state.card.map(pokemon => (
+                                <PokemonCard key={pokemon.id} pokemon={pokemon} />
+                            )) :
+                            <PokemonCard key={this.props.filtered.id} pokemon={this.props.filtered} />
+                        }
                     </div>
                 ) : (
                         <Loading />
-                    )}
-
+                    )}              
             </div>
         );
     }
