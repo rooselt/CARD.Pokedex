@@ -1,5 +1,5 @@
 # CARD.Pokedex
-Localiza Teste
+Localiza Teste, REACT and sln .NET CORE
 
 ## Updating to New Releases
 
