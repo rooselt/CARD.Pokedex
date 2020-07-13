@@ -40,17 +40,21 @@ my-app/
           Dashboard.js
           Layout.js
           Loading.js
+          spinner.gif
         pokemon/
           Pokemon.js
           PokemonCard.js
           PokemonList.js
         search/
           Search.js        
-    App.css
     App.js
+    custom.css 
     App.test.js
     index.css
     index.js
+    NavMenu.css
+    NavMenu.js
+    registerServiceWorker.js
     logo.svg
 ```
 
