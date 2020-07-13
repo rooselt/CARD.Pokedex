@@ -9,9 +9,18 @@ Visual Studio 2019
 
 In the project it is possible to add, remove and search, see details about the pokemon, as well as its profile.
 
-![Screenshot](details.png)
+
+Dashbord. Search Pokemon, Add, remove
+
 ![Screenshot](dashboard.png)
+
+My Cards
+
 ![Screenshot](my.png)
+
+Details Pokemon
+
+![Screenshot](details.png)
 
 ## Folder Structure
 
