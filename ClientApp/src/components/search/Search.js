@@ -19,6 +19,9 @@ export default class Search extends Component {
     render() {
         return (
             <div>
+                <div style={{ margin: '31px' }}>
+                    <h3>Digite as cartas que deseja e aperte ENTER ou Escolha as do DECK:</h3>
+                </div>
                 <form onSubmit={this.onFormSubmit}>
                     <input
                         placeholder="Pokemon"
@@ -36,6 +39,8 @@ export default class Search extends Component {
                         }}
                     />
                 </form>
+                <hr />
+                <h3>DECK</h3>
             </div>
         );
     }

@@ -9,7 +9,7 @@ export class Layout extends Component {
         return (
             <div>
                 <NavMenu />
-                <Container>
+                <Container style={{ marginBottom: '50px' }}>
                     {this.props.children}
                 </Container>
                 <footer>

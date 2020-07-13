@@ -32,10 +32,12 @@ export default class PokemonList extends Component {
         super(props);
 
         this.state = {
-            card: [],            
+            card: [],
             loading: true,
             url: 'https://pokeapi.co/api/v2/pokemon/',
-            filtered: []
+            filtered: [],
+            isRemove: false,
+            pokemons: []
         };
     }
 
@@ -45,15 +47,21 @@ export default class PokemonList extends Component {
         this.setState({ card: pokemon });
     }
 
-    handleFieldChange = (pokemons) => {        
+    handleFieldChange = (pokemons) => {
 
         this.setState({ card: pokemons });
     };
 
     render() {
 
-        const eventhandler = data => console.log(data)
-        
+        const eventhandler = (data, item) => {
+            if (Object.keys(data).length > 0) {
+                this.setState({ pokemons: data,  isRemove: false});
+            } else if (item){
+                this.setState({ pokemons: [], isRemove: true });
+            }
+        }
+
         let filtered = Object.keys(this.props.filtered).length > 0 ? this.props.filtered : this.state.card;
 
         if (filtered.count !== undefined && filtered.count > 0) {
@@ -69,20 +77,39 @@ export default class PokemonList extends Component {
         }
 
         return (
-            <div className="poke-container" >              
-                {Object.keys(filtered).length > 0 ? (
-                    <div className="row">
-                        {this.state.card && Object.keys(this.props.filtered).length === 0 ?
-                            this.state.card.map(pokemon => (
-                                <PokemonCard key={pokemon.id} pokemon={pokemon} handleChange={eventhandler} />
-                            )) :
-                            <PokemonCard key={this.props.filtered.id} pokemon={this.props.filtered} />
-                        }
-                    </div>
-                ) : (
-                        <Loading />
-                    )}              
-            </div>
+            <div>
+                <div className="poke-container">
+                    {Object.keys(filtered).length > 0 ? (
+                        <div className="row">
+                            {this.state.card && Object.keys(this.props.filtered).length === 0 ?
+                                this.state.card.map(pokemon => (
+                                    <PokemonCard key={pokemon.id} pokemon={pokemon} handleChange={eventhandler} />
+                                )) :
+                                <PokemonCard key={this.props.filtered.id} pokemon={this.props.filtered} />
+                            }
+                        </div>
+                    ) : (
+                            <Loading />
+                        )}
+                </div>
+                <hr />
+                <div>
+                    <h3>Minhas Cartas</h3>
+                </div>
+                <div className="poke-container">
+                    {this.state.pokemons ? (
+                        <div className="row">
+
+                            {this.state.pokemons.map(pokemon => {
+                                return <PokemonCard key={pokemon.id} pokemon={pokemon} handleChange={eventhandler} />
+                            })}
+                        </div>
+                    ) : (
+                            <Loading />
+                        )}
+
+                </div>
+            </div >
         );
-    }   
+    }
 }

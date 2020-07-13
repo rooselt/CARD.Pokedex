@@ -48,6 +48,8 @@ const tagColors = {
 };
 const main_types = Object.keys(colors);
 
+var list = [];
+
 var setColor = color => {
     let actColor = tagColors[color];
     return actColor;
@@ -121,7 +123,9 @@ export default class PokemonCard extends Component {
             ability: {},
             abilityUrl: '',
             imageLoading: true,
-            toManyRequests: false
+            toManyRequests: false,
+            isUpdate: true,
+            isRemove: false
         };
 
     }
@@ -140,38 +144,54 @@ export default class PokemonCard extends Component {
     async addItem(e, id) {
         e.preventDefault();
 
-        let list = this.state.pokemons;
         let response = await getPokemonById(id);
 
         if (response.status !== 404) {
-            list.push(response);
 
-            this.setState({
-                pokemons: list
+            var pokemon = list.filter((item) => {
+                return item.id === id;
             });
 
-            this.setState({ pokemons: list });
+            if (pokemon.length === 0) {
+                list.push(response);
+
+                this.setState({ pokemons: list, isUpdate: true });
+            }
         }
     }
 
-    removeItem(item) {
-        const list = this.state.list.slice();
+    removeItem(e, item) {
+        e.preventDefault();
 
+        list = list.slice();
         list.some((el, i) => {
-            if (el === item) {
+            if (el.id === item) {
                 list.splice(i, 1);
+
+                this.setState({
+                    isRemove: true
+                });
                 return true;
             }
+
+            this.setState({
+                isRemove: false
+            });
         });
 
         this.setState({
+            isUpdate: true,       
             pokemons: list
         });
     }
 
     componentDidUpdate() {
         if (this.props.handleChange) {
-            this.props.handleChange(this.state.pokemons);
+            if (this.state.isUpdate) {
+                this.props.handleChange(this.state.pokemons, this.state.isRemove);
+
+                this.setState({ isUpdate: false });
+            }
         }
     }
 
@@ -239,7 +259,7 @@ export default class PokemonCard extends Component {
                                                 delay={{ show: 250, hide: 400 }}
                                                 overlay={renderTooltipInfo}
                                             >
-                                                <a href={`pokemon/${this.state.pokemon.id}`} className="card-icon card-info">
+                                                <a href={`pokemon/${this.state.pokemon.id}`} className="card-icon card-info" target="_blank">
                                                     <i className="fa fa-info-circle"></i>
                                                 </a>
                                             </OverlayTrigger>
@@ -250,7 +270,7 @@ export default class PokemonCard extends Component {
                                                 delay={{ show: 250, hide: 400 }}
                                                 overlay={renderTooltipRemove}
                                             >
-                                                <a href="#" className="card-icon card-remove">
+                                                <a href="#" onClick={(e) => this.removeItem(e, this.state.pokemon.id)} className="card-icon card-remove">
                                                     <i className="fa fa-minus"></i></a>
                                             </OverlayTrigger>
                                         </li>
