@@ -157,7 +157,7 @@ export default class PokemonCard extends Component {
                 this.setState({ pokemons: list, isUpdate: true });
             } else {
                 this.setState({ pokemons: list, isUpdate: true });
-            } 
+            }
         }
     }
 
@@ -287,7 +287,7 @@ export default class PokemonCard extends Component {
                                         </li>
                                     </ul>
                                 </div>
-                                <div className="img-container">
+                                <div className="img-container" onClick={() => createPopUpCard(this.state.pokemon.name.toLowerCase())}>
                                     {this.state.imageLoading ?
                                         (<img src={spinner}
                                             style={{ width: '5em', height: '5em' }}
