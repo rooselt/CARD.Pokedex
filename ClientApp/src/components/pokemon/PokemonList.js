@@ -48,7 +48,6 @@ export default class PokemonList extends Component {
     }
 
     handleFieldChange = (pokemons) => {
-
         this.setState({ card: pokemons });
     };
 
@@ -56,8 +55,8 @@ export default class PokemonList extends Component {
 
         const eventhandler = (data, item) => {
             if (Object.keys(data).length > 0) {
-                this.setState({ pokemons: data,  isRemove: false});
-            } else if (item){
+                this.setState({ pokemons: data, isRemove: false });
+            } else if (item) {
                 this.setState({ pokemons: [], isRemove: true });
             }
         }
@@ -66,11 +65,24 @@ export default class PokemonList extends Component {
 
         if (filtered.count !== undefined && filtered.count > 0) {
             return (
-                <div className="poke-container">
-                    <div className="row">
-                        {this.state.card.map(pokemon => {
-                            return <PokemonCard key={pokemon.id} pokemon={pokemon} />
-                        })}
+                <div>
+                    <div className="poke-container">
+                        <div className="row">
+                            {this.state.card.map(pokemon => {
+                                return <PokemonCard key={pokemon.id} pokemon={pokemon} handleChange={eventhandler} />
+                            })}
+                        </div>
+                    </div>
+                    <hr />
+                    <div>
+                        <h3>Minhas Cartas ({this.state.pokemons.length})</h3>
+                    </div>
+                    <div className="poke-container">
+                        <div className="row">
+                            {this.state.pokemons.map(pokemon => {
+                                return <PokemonCard key={pokemon.id} pokemon={pokemon} handleChange={eventhandler} />
+                            })}
+                        </div>
                     </div>
                 </div>
             )
@@ -85,7 +97,7 @@ export default class PokemonList extends Component {
                                 this.state.card.map(pokemon => (
                                     <PokemonCard key={pokemon.id} pokemon={pokemon} handleChange={eventhandler} />
                                 )) :
-                                <PokemonCard key={this.props.filtered.id} pokemon={this.props.filtered} />
+                                <PokemonCard key={this.props.filtered.id} pokemon={this.props.filtered} handleChange={eventhandler} />
                             }
                         </div>
                     ) : (
@@ -94,22 +106,16 @@ export default class PokemonList extends Component {
                 </div>
                 <hr />
                 <div>
-                    <h3>Minhas Cartas</h3>
+                    <h3>Minhas Cartas ({this.state.pokemons.length})</h3>
                 </div>
                 <div className="poke-container">
-                    {this.state.pokemons ? (
-                        <div className="row">
-
-                            {this.state.pokemons.map(pokemon => {
-                                return <PokemonCard key={pokemon.id} pokemon={pokemon} handleChange={eventhandler} />
-                            })}
-                        </div>
-                    ) : (
-                            <Loading />
-                        )}
-
+                    <div className="row">
+                        {this.state.pokemons.map(pokemon => {
+                            return <PokemonCard key={pokemon.id} pokemon={pokemon} handleChange={eventhandler} />
+                        })}
+                    </div>
                 </div>
-            </div >
+            </div>
         );
     }
 }

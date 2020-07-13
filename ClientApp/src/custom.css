@@ -21,6 +21,8 @@ h1 { letter-spacing: 3px; }
 
 h3, .h3 { font-size: 1.00rem; }
 
+.logo { width: 32px; position: absolute; margin-left: -36px; }
+
 input[type="text"] { font-family: "Iceland", cursive; }
 
 .poke-container { display: inline-block; flex-wrap: wrap; align-items: space-between; justify-content: center; align-content: center; margin: 0 auto; max-width: 100%; }
@@ -43,9 +45,9 @@ input[type="text"] { font-family: "Iceland", cursive; }
 
 .row { flex-wrap: unset; }
 
-.div-direction-right { height: 100%; position: absolute; right: 9rem; top: 8rem; z-index: 99; }
+.div-direction-right { height: 100%; position: absolute; right: 9rem; top: 16rem; z-index: 99; }
 
-.div-direction-left { height: 100%; position: absolute; left: 9rem; top: 8rem; z-index: 99; }
+.div-direction-left { height: 100%; position: absolute; left: 9rem; top: 16rem; z-index: 99; }
 
 .a-left { font-size: 13em; line-height: 1em; z-index: 11; color: #131313; margin-left: 7px; }
 

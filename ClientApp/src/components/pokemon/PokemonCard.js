@@ -146,8 +146,7 @@ export default class PokemonCard extends Component {
 
         let response = await getPokemonById(id);
 
-        if (response.status !== 404) {
-
+        if (response.status !== 404 && list.length <= 60) {
             var pokemon = list.filter((item) => {
                 return item.id === id;
             });
@@ -156,7 +155,9 @@ export default class PokemonCard extends Component {
                 list.push(response);
 
                 this.setState({ pokemons: list, isUpdate: true });
-            }
+            } else {
+                this.setState({ pokemons: list, isUpdate: true });
+            } 
         }
     }
 
@@ -180,7 +181,7 @@ export default class PokemonCard extends Component {
         });
 
         this.setState({
-            isUpdate: true,       
+            isUpdate: true,
             pokemons: list
         });
     }
