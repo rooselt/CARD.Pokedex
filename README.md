@@ -58,6 +58,6 @@ my-app/
     registerServiceWorker.js
     
 ```
-##Avaible
+## Avaible
 
 https://card-pokedex.herokuapp.com/#
