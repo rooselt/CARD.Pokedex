@@ -2,7 +2,6 @@
 import PokemonList from '../pokemon/PokemonList';
 import Search from '../search/Search';
 
-
 var getPokemonByName = async inputValue => {
     if (inputValue == null)
         return [];
@@ -14,32 +13,33 @@ var getPokemonByName = async inputValue => {
     return pokemon;
 };
 
-
-export default class Home extends Component {
-    static displayName = Home.name;
+export default class Dashboard extends Component {
+    static displayName = Dashboard.name;
 
     constructor(props) {
         super(props);
 
         this.state = {
-            pokemon: {}
+            pokemon: {},
+            pokemons: [],
+            search: '',
         };
 
-        this.useRef = React.createRef();
+        this.useRef = React.createRef();     
     }
 
     onSearchSubmit = async text => {
         const response = await getPokemonByName(text);
 
-        this.setState({ pokemon: response });
+        this.setState({ pokemon: response, search: text });
     }
 
+  
 
     render() {
         const scroll = (scrollOffset) => {
             this.useRef.current.scrollLeft += scrollOffset;
         };
-
 
         return (
             <div>

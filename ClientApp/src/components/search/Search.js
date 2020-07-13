@@ -12,7 +12,7 @@ export default class Search extends Component {
     onFormSubmit = event => {
         event.preventDefault()
 
-        this.props.onSubmit(this.state.text)
+        this.props.onSubmit(this.state.text.toLowerCase())
     }
 
 
@@ -23,8 +23,8 @@ export default class Search extends Component {
                     <input
                         placeholder="Pokemon"
                         className="form-control mx-auto"
-                        value={this.state.text}
-                        onChange={e => this.setState({ text: e.target.value })}
+                        value={this.state.text.toLowerCase()}
+                        onChange={e => this.setState({ text: e.target.value.toLowerCase() })}
                         style={{
                             backgroundColor: 'white transparent',
                             height: '1.75em',

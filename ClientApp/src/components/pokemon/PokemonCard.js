@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styled from 'styled-components';
 import spinner from '../layout/spinner.gif';
 import Loading from '../layout/Loading';
@@ -10,8 +10,6 @@ const Sprite = styled.img`
   display: none;
 `;
 
-//const pokeContainer = document.getElementById("poke_container");
-//const pokeNumber = 1000;
 const colors = {
     fire: "#FDDFDF",
     grass: "#DEFDE0",
@@ -50,51 +48,29 @@ const tagColors = {
 };
 const main_types = Object.keys(colors);
 
-//var setState = el => {
-//    const display = document.getElementById(el).style.display;
-
-//    if (display === "info") {
-//        document.getElementById(el).style.display = "block";
-//    } else {
-//        document.getElementById(el).style.display = "none";
-//    }
-//}
-
 var setColor = color => {
     let actColor = tagColors[color];
     return actColor;
 }
-
 var setAbility = async url => {
     const res = await fetch(url);
     const ability = await res.json();
 
     return ability;
 };
-
 var createPopUpCard = pokemon => {
-    let popEl = `${pokemon.name}_info`;
+    let popEl = `${pokemon}_info`;
     let actEl = document.getElementById(popEl).style.display;
 
     if (actEl === "none") {
         document.getElementById(popEl).style.display = "block";
         document.getElementById(popEl).style.opacity = "1";
-        document.getElementById(pokemon.name + "_container").style.opacity = "0";
+        document.getElementById(pokemon + "_container").style.opacity = "0";
     } else {
         document.getElementById(popEl).style.display = "none";
-        document.getElementById(pokemon.name + "_container").style.opacity = "1";
+        document.getElementById(pokemon + "_container").style.opacity = "1";
     }
 };
-
-var selectPokemon = async id => {
-    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
-    let res = await fetch(url);
-    let pokemon = await res.json();
-
-    createPopUpCard(pokemon);
-};
-
-
 var createPokemonCard = async pokemon => {
     let poke_types = pokemon.types.map(el => el.type.name);
     let type = main_types.find(type => poke_types.indexOf(type) > -1);
@@ -119,6 +95,15 @@ var createPokemonCard = async pokemon => {
     }
 }
 
+var getPokemonById = async id => {
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+
+    let res = await fetch(url);
+    let pokemon = await res.json();
+
+    return pokemon;
+};
+
 export default class PokemonCard extends Component {
     static displayName = PokemonCard.name;
 
@@ -128,6 +113,7 @@ export default class PokemonCard extends Component {
         this.state = {
             id: 0,
             pokemon: {},
+            pokemons: [],
             name: '',
             color: '',
             types: '',
@@ -137,6 +123,7 @@ export default class PokemonCard extends Component {
             imageLoading: true,
             toManyRequests: false
         };
+
     }
 
     async componentDidMount() {
@@ -150,20 +137,71 @@ export default class PokemonCard extends Component {
         console.error(err)
     }
 
-    saveCardData = async card => {
-        const response = await fetch('pokemon', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(card[0])
-        });
+    async addItem(e, id) {
+        e.preventDefault();
 
-        await response.json();
+        let list = this.state.pokemons;
+        let response = await getPokemonById(id);
+
+        if (response.status !== 404) {
+            list.push(response);
+
+            this.setState({
+                pokemons: list
+            });
+
+            this.setState({ pokemons: list });
+        }
     }
 
+    removeItem(item) {
+        const list = this.state.list.slice();
+
+        list.some((el, i) => {
+            if (el === item) {
+                list.splice(i, 1);
+                return true;
+            }
+        });
+
+        this.setState({
+            pokemons: list
+        });
+    }
+
+    componentDidUpdate() {
+        if (this.props.handleChange) {
+            this.props.handleChange(this.state.pokemons);
+        }
+    }
+
+
     render() {
+
+        function renderTooltipInfo(props) {
+            return (
+                <Tooltip id="button-tooltip" {...props}>
+                    Card Details
+                </Tooltip>
+            );
+        }
+
+        function renderTooltipAdd(props) {
+            return (
+                <Tooltip id="button-tooltip" {...props}>
+                    Card Add
+                </Tooltip>
+            );
+        }
+
+        function renderTooltipRemove(props) {
+            return (
+                <Tooltip id="button-tooltip" {...props}>
+                    Card Remove
+                </Tooltip>
+            );
+        }
+
         function SpanTypes(item) {
             let types = item.types;
 
@@ -181,8 +219,8 @@ export default class PokemonCard extends Component {
             let uniqueType = types[0];
 
             return (<div className="types">
-                        <span className="types" style={{ backgroundColor: setColor(uniqueType) }}>{uniqueType}</span>
-                    </div>);
+                <span className="types" style={{ backgroundColor: setColor(uniqueType) }}>{uniqueType}</span>
+            </div>);
         }
 
         let isPokemon = Object.getOwnPropertyNames(this.state.pokemon).length > 0;
@@ -191,33 +229,70 @@ export default class PokemonCard extends Component {
             <div className="pokemon" style={{ backgroundColor: this.state.pokemon.color }}>
                 {isPokemon ?
                     (
-                        <div className="poke-container">
-                            <div className="img-container">
-                                {this.state.imageLoading ?
-                                    (<img src={spinner}
-                                        style={{ width: '5em', height: '5em' }}
-                                        className="card-img-top rounded mx-auto d-block mt-2" />) :
-                                    null}
-                                <Sprite
-                                    className="card-img-top rounded mx-auto mt-2"
-                                    src={this.state.pokemon.imageUrl}
-                                    onLoad={() => this.setState({ imageLoading: false })}
-                                    onError={() => this.setState({ toManyRequests: true })}
-                                    style={
-                                        this.state.toManyRequests
-                                            ? { display: 'none' }
-                                            : this.state.imageLoading
-                                                ? null
-                                                : { display: 'block' }
-                                    }
-                                />
+                        <div>
+                            <div id={this.state.pokemon.name.toLowerCase() + "_container"} className="poke-container">
+                                <div className="card-controls">
+                                    <ul>
+                                        <li>
+                                            <OverlayTrigger
+                                                placement="top"
+                                                delay={{ show: 250, hide: 400 }}
+                                                overlay={renderTooltipInfo}
+                                            >
+                                                <a href={`pokemon/${this.state.pokemon.id}`} className="card-icon card-info">
+                                                    <i className="fa fa-info-circle"></i>
+                                                </a>
+                                            </OverlayTrigger>
+                                        </li>
+                                        <li>
+                                            <OverlayTrigger
+                                                placement="top"
+                                                delay={{ show: 250, hide: 400 }}
+                                                overlay={renderTooltipRemove}
+                                            >
+                                                <a href="#" className="card-icon card-remove">
+                                                    <i className="fa fa-minus"></i></a>
+                                            </OverlayTrigger>
+                                        </li>
+                                        <li>
+                                            <OverlayTrigger
+                                                placement="top"
+                                                delay={{ show: 250, hide: 400 }}
+                                                overlay={renderTooltipAdd}
+                                            >
+                                                <a href="#" onClick={(e) => this.addItem(e, this.state.pokemon.id)} className="card-icon card-add">
+                                                    <i className="fa fa-plus"></i></a>
+                                            </OverlayTrigger>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div className="img-container">
+                                    {this.state.imageLoading ?
+                                        (<img src={spinner}
+                                            style={{ width: '5em', height: '5em' }}
+                                            className="card-img-top rounded mx-auto d-block mt-2" />) :
+                                        null}
+                                    <Sprite
+                                        className="card-img-top rounded mx-auto mt-2"
+                                        src={this.state.pokemon.imageUrl}
+                                        onLoad={() => this.setState({ imageLoading: false })}
+                                        onError={() => this.setState({ toManyRequests: true })}
+                                        style={
+                                            this.state.toManyRequests
+                                                ? { display: 'none' }
+                                                : this.state.imageLoading
+                                                    ? null
+                                                    : { display: 'block' }
+                                        }
+                                    />
+                                </div>
+                                <div className="info">
+                                    <span className="number">#{this.state.pokemon.id.toString().padStart(3, "0")}</span>
+                                    <h3 className="name">{this.state.pokemon.name}</h3>
+                                </div>
+                                <SpanTypes types={this.state.pokemon.types} />
                             </div>
-                            <div className="info">
-                                <span className="number">#{this.state.pokemon.id.toString().padStart(3, "0")}</span>
-                                <h3 className="name">{this.state.pokemon.name}</h3>
-                            </div>
-                            <SpanTypes types={this.state.pokemon.types} />
-                            <div id={this.state.pokemon.name + "_info"} className="more_info" style={{ display: 'none', opacity: '0' }}>
+                            <div id={this.state.pokemon.name.toLowerCase() + "_info"} className="more_info" style={{ display: 'none', opacity: '0' }} onClick={() => createPopUpCard(this.state.pokemon.name.toLowerCase())}>
                                 <span className="title">Ability Info</span>
                                 <h3 className="name_ability">{this.state.pokemon.ability.name}</h3>
 
