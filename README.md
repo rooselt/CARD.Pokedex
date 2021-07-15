@@ -1,5 +1,5 @@
 # CARD.Pokedex
-Localiza Teste, REACT and sln .NET CORE e BOOTSTRAP
+REACT and sln .NET CORE e BOOTSTRAP
 
 ## Enviroment
 
